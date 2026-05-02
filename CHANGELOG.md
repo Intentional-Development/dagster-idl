@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - (Placeholder for in-progress work)
 
+## [0.9.3] - 2025-01-03
+
+- **dagster-idl:** version alignment, no functional changes.
+
 ## [0.9.2] - 2026-05-02
 
 ### Added (Wave 15 — Initial Release)
