@@ -1,0 +1,227 @@
+{
+  "schema_version": "0.1.4",
+  "graph": {
+    "nodes": [
+      {
+        "id": "asset_topstory_ids",
+        "label": "topstory_ids",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "asset",
+          "is_partitioned": false,
+          "partitions_def": null,
+          "return_type": "None",
+          "input_cardinality": "one",
+          "output_cardinality": "one",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/quickstart_etl_assets.py"
+        }
+      },
+      {
+        "id": "asset_topstories",
+        "label": "topstories",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "asset",
+          "is_partitioned": false,
+          "partitions_def": null,
+          "return_type": "MaterializeResult",
+          "input_cardinality": "one",
+          "output_cardinality": "one",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/quickstart_etl_assets.py"
+        }
+      },
+      {
+        "id": "asset_most_frequent_words",
+        "label": "most_frequent_words",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "asset",
+          "is_partitioned": false,
+          "partitions_def": null,
+          "return_type": "MaterializeResult",
+          "input_cardinality": "one",
+          "output_cardinality": "one",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/quickstart_etl_assets.py"
+        }
+      },
+      {
+        "id": "asset_releases_metadata",
+        "label": "releases_metadata",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "asset",
+          "is_partitioned": true,
+          "partitions_def": "<ref:releases_partitions_def>",
+          "return_type": "DataFrame",
+          "input_cardinality": "many",
+          "output_cardinality": "many",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/dynamic_partitions_assets.py"
+        }
+      },
+      {
+        "id": "asset_release_zips",
+        "label": "release_zips",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "asset",
+          "is_partitioned": true,
+          "partitions_def": "<ref:releases_partitions_def>",
+          "return_type": "None",
+          "input_cardinality": "many",
+          "output_cardinality": "many",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/dynamic_partitions_assets.py"
+        }
+      },
+      {
+        "id": "asset_release_files",
+        "label": "release_files",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "asset",
+          "is_partitioned": true,
+          "partitions_def": "<ref:releases_partitions_def>",
+          "return_type": "None",
+          "input_cardinality": "many",
+          "output_cardinality": "many",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/dynamic_partitions_assets.py"
+        }
+      },
+      {
+        "id": "asset_release_files_metadata",
+        "label": "release_files_metadata",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "asset",
+          "is_partitioned": true,
+          "partitions_def": "<ref:releases_partitions_def>",
+          "return_type": "DataFrame",
+          "input_cardinality": "many",
+          "output_cardinality": "many",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/dynamic_partitions_assets.py"
+        }
+      },
+      {
+        "id": "asset_releases_summary",
+        "label": "releases_summary",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "asset",
+          "is_partitioned": false,
+          "partitions_def": null,
+          "return_type": "Output[DataFrame]",
+          "input_cardinality": "one",
+          "output_cardinality": "one",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/dynamic_partitions_assets.py"
+        }
+      },
+      {
+        "id": "multi_write_multiple_artifacts",
+        "label": "write_multiple_artifacts",
+        "node_type": "computation",
+        "properties": {
+          "dagster_type": "multi_asset",
+          "output_count": 2,
+          "return_type": "tuple[wandb.Table, wandb.Table]",
+          "source_file": "/Users/carloshm/personal-projects/intentional/dagster-idl/intent/sources/multi_asset_example.py"
+        }
+      },
+      {
+        "id": "asset_first_table",
+        "label": "first_table",
+        "node_type": "data",
+        "properties": {
+          "dagster_type": "asset_output",
+          "parent_multi_asset": "write_multiple_artifacts"
+        }
+      },
+      {
+        "id": "asset_second_table",
+        "label": "second_table",
+        "node_type": "data",
+        "properties": {
+          "dagster_type": "asset_output",
+          "parent_multi_asset": "write_multiple_artifacts"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "asset_topstory_ids",
+        "target": "asset_topstories",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "broadcast"
+        }
+      },
+      {
+        "source": "asset_topstories",
+        "target": "asset_most_frequent_words",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "broadcast"
+        }
+      },
+      {
+        "source": "asset_releases_metadata",
+        "target": "asset_release_zips",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "partition"
+        }
+      },
+      {
+        "source": "asset_release_zips",
+        "target": "asset_release_files",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "partition"
+        }
+      },
+      {
+        "source": "asset_release_files",
+        "target": "asset_release_files_metadata",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "partition"
+        }
+      },
+      {
+        "source": "asset_releases_metadata",
+        "target": "asset_releases_summary",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "broadcast"
+        }
+      },
+      {
+        "source": "asset_release_files_metadata",
+        "target": "asset_releases_summary",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "broadcast"
+        }
+      },
+      {
+        "source": "multi_write_multiple_artifacts",
+        "target": "asset_first_table",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "partition"
+        }
+      },
+      {
+        "source": "multi_write_multiple_artifacts",
+        "target": "asset_second_table",
+        "edge_type": "dataflow",
+        "properties": {
+          "fan_strategy": "partition"
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "extractor": "dagster-idl-extractor",
+    "version": "0.1.0",
+    "extraction_date": "2025-01-01"
+  }
+}
